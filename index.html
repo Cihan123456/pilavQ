@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#090909">
+
+  <title>PilavQ | Dijital Menü</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      background: #090909;
+    }
+
+    body {
+      overflow-x: hidden;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .menu {
+      width: 100%;
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0;
+      background: #090909;
+    }
+
+    .page {
+      position: relative;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      line-height: 0;
+    }
+
+    .page img {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    .call-button {
+      position: absolute;
+      left: 2%;
+      top: 72%;
+      width: 75%;
+      height: 15%;
+      z-index: 10;
+      display: block;
+      border-radius: 18px;
+      -webkit-tap-highlight-color: rgba(255, 196, 44, 0.15);
+      touch-action: manipulation;
+    }
+
+    .call-button:focus-visible {
+      outline: 3px solid #f6c343;
+      outline-offset: -3px;
+    }
+
+    @media (min-width: 1081px) {
+      body {
+        background: #111;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="menu" aria-label="PilavQ Dijital Menü">
+
+    <!-- 1. GİRİŞ -->
+    <section class="page">
+      <img
+        src="01-giris.webp"
+        alt="PilavQ dijital menü giriş"
+        fetchpriority="high"
+      >
+    </section>
+
+    <!-- 2. PİLAVLAR 1 -->
+    <section class="page">
+      <img
+        src="02-pilav-1.webp"
+        alt="PilavQ pilavlar"
+        loading="lazy"
+        decoding="async"
+      >
+    </section>
+
+    <!-- 3. PİLAVLAR 2 -->
+    <section class="page">
+      <img
+        src="03-pilav-2.webp"
+        alt="PilavQ pilavlar devam"
+        loading="lazy"
+        decoding="async"
+      >
+    </section>
+
+    <!-- 4. MİDYE -->
+    <section class="page">
+      <img
+        src="04-midye.webp"
+        alt="PilavQ Karaburun midye"
+        loading="lazy"
+        decoding="async"
+      >
+    </section>
+
+    <!-- 5. EV YEMEKLERİ -->
+    <section class="page">
+      <img
+        src="05-ev-yemekleri.webp"
+        alt="PilavQ ev yemekleri"
+        loading="lazy"
+        decoding="async"
+      >
+    </section>
+
+    <!-- 6. KAMPANYALI MENÜLER -->
+    <section class="page">
+      <img
+        src="06-kampanyali-menuler.webp"
+        alt="PilavQ kampanyalı menüler"
+        loading="lazy"
+        decoding="async"
+      >
+    </section>
+
+    <!-- 7. İÇECEKLER VE İLETİŞİM -->
+    <section class="page">
+      <img
+        src="07-icecekler-iletisim.png"
+        alt="PilavQ içecekler ve iletişim"
+        loading="lazy"
+        decoding="async"
+      >
+
+      <a
+        class="call-button"
+        href="tel:+905395571735"
+        aria-label="Sipariş için 539 557 17 35 numarasını ara"
+      ></a>
+    </section>
+
+  </main>
+
+</body>
+</html>
