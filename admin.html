@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PilavQ - Fiyat Yönetimi</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #071c34;
+      color: white;
+    }
+
+    .panel {
+      width: 100%;
+      max-width: 500px;
+      margin: 40px auto;
+      background: white;
+      color: #222;
+      padding: 25px;
+      border-radius: 18px;
+    }
+
+    h1 {
+      margin-top: 0;
+      color: #071c34;
+      text-align: center;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      margin: 8px 0;
+      font-size: 18px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
+      border: 0;
+      border-radius: 10px;
+      background: #071c34;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .logout {
+      background: #777;
+    }
+
+    #adminPanel {
+      display: none;
+    }
+
+    #message {
+      text-align: center;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="panel" id="loginPanel">
+    <h1>PilavQ</h1>
+    <h2>Fiyat Yönetimi</h2>
+
+    <input
+      id="email"
+      type="text"
+      value="pilavq@pilavq.local"
+      placeholder="Kullanıcı"
+    >
+
+    <input
+      id="password"
+      type="password"
+      placeholder="Şifre"
+    >
+
+    <button id="loginButton">Giriş Yap</button>
+
+    <div id="loginMessage"></div>
+  </div>
+
+
+  <div class="panel" id="adminPanel">
+    <h1>PilavQ</h1>
+    <h2>Ürün Fiyatları</h2>
+
+    <label for="tavukPrice">Tavuk Pilav</label>
+
+    <input
+      id="tavukPrice"
+      type="number"
+      inputmode="numeric"
+      placeholder="Fiyat"
+    >
+
+    <button id="saveButton">
+      Fiyatı Kaydet
+    </button>
+
+    <button id="logoutButton" class="logout">
+      Çıkış Yap
+    </button>
+
+    <div id="message"></div>
+  </div>
+
+
+  <script type="module">
+
+    import { initializeApp }
+    from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      signOut,
+      onAuthStateChanged
+    }
+    from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      updateDoc
+    }
+    from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCFdapoLEephXIdBzv7L34pReYUCrzPNec",
+      authDomain: "pilavq-fiyat-yonetimi-2.firebaseapp.com",
+      projectId: "pilavq-fiyat-yonetimi-2",
+      storageBucket: "pilavq-fiyat-yonetimi-2.firebasestorage.app",
+      messagingSenderId: "482390148044",
+      appId: "1:482390148044:web:3537d37f8d5860d2265369"
+    };
+
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+
+    const loginPanel = document.getElementById("loginPanel");
+    const adminPanel = document.getElementById("adminPanel");
+
+    const email = document.getElementById("email");
+    const password = document.getElementById("password");
+
+    const loginButton = document.getElementById("loginButton");
+    const logoutButton = document.getElementById("logoutButton");
+
+    const tavukPrice = document.getElementById("tavukPrice");
+    const saveButton = document.getElementById("saveButton");
+
+    const loginMessage = document.getElementById("loginMessage");
+    const message = document.getElementById("message");
+
+
+    loginButton.addEventListener("click", async () => {
+
+      loginMessage.textContent = "Giriş yapılıyor...";
+
+      try {
+
+        await signInWithEmailAndPassword(
+          auth,
+          email.value.trim(),
+          password.value
+        );
+
+        password.value = "";
+        loginMessage.textContent = "";
+
+      } catch (error) {
+
+        loginMessage.textContent =
+          "Kullanıcı veya şifre hatalı.";
+
+      }
+
+    });
+
+
+    logoutButton.addEventListener("click", async () => {
+      await signOut(auth);
+    });
+
+
+    async function loadPrice() {
+
+      const ref = doc(db, "products", "tavuk-pilav");
+      const snapshot = await getDoc(ref);
+
+      if (snapshot.exists()) {
+        tavukPrice.value = snapshot.data().price;
+      }
+
+    }
+
+
+    saveButton.addEventListener("click", async () => {
+
+      const newPrice = Number(tavukPrice.value);
+
+      if (!newPrice || newPrice <= 0) {
+        message.textContent = "Geçerli bir fiyat girin.";
+        return;
+      }
+
+      message.textContent = "Kaydediliyor...";
+
+      try {
+
+        const ref = doc(db, "products", "tavuk-pilav");
+
+        await updateDoc(ref, {
+          price: newPrice
+        });
+
+        message.textContent =
+          "✓ Fiyat başarıyla güncellendi.";
+
+      } catch (error) {
+
+        message.textContent =
+          "Fiyat kaydedilemedi.";
+
+      }
+
+    });
+
+
+    onAuthStateChanged(auth, async (user) => {
+
+      if (user) {
+
+        loginPanel.style.display = "none";
+        adminPanel.style.display = "block";
+
+        await loadPrice();
+
+      } else {
+
+        adminPanel.style.display = "none";
+        loginPanel.style.display = "block";
+
+      }
+
+    });
+
+  </script>
+
+</body>
+</html>
